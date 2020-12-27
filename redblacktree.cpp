@@ -32,6 +32,7 @@ void RedBlackTree::BPressed(){
         tree.insert(Inputval.toInt());
         tree.print();
     } else if(butname == "Delete"){
+        tree.Delete(Inputval.toInt());
         tree.print();
     } else if(butname=="Clear"){
         tree.clear();

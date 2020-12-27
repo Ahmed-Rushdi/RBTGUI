@@ -324,30 +324,139 @@ public:
         root->color = BLACK;
     }
 
-    void Delete(int key) {
-        node* x = search(key);
-        if (x == NULL) {
-            return;
+    node *minimum(node *Node) {
+        while (Node->left != empty_node) {
+          Node = Node->left;
         }
-        if (x->color == RED) {
-            if (x->left == NULL && x->right == NULL) {
-                delete x;
-            }
-            else if (x->left != NULL && x->right == NULL) {
-                node* cur = x->left;
-                while (cur != NULL) {
-                    if (cur->right != NULL) {
-                        cur = cur->right;
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-        }
+        return Node;
+      }
 
 
-    }
+        void deleteFix(node *x) {
+        node *s;
+        while (x != root && x->color == 0) {
+          if (x == x->p->left) {
+            s = x->p->right;
+            if (s->color == 1) {
+              s->color = 0;
+              x->p->color = 1;
+              leftRotate(x->p);
+              s = x->p->right;
+            }
+
+            if (s->left->color == 0 && s->right->color == 0) {
+              s->color = 1;
+              x = x->p;
+            } else {
+              if (s->right->color == 0) {
+                s->left->color = 0;
+                s->color = 1;
+                rightRotate(s);
+                s = x->p->right;
+              }
+
+              s->color = x->p->color;
+              x->p->color = 0;
+              s->right->color = 0;
+              leftRotate(x->p);
+              x = root;
+            }
+          } else {
+            s = x->p->left;
+            if (s->color == 1) {
+              s->color = 0;
+              x->p->color = 1;
+              rightRotate(x->p);
+              s = x->p->left;
+            }
+
+            if (s->right->color == 0 && s->right->color == 0) {
+              s->color = 1;
+              x = x->p;
+            } else {
+              if (s->left->color == 0) {
+                s->right->color = 0;
+                s->color = 1;
+                leftRotate(s);
+                s = x->p->left;
+              }
+
+              s->color = x->p->color;
+              x->p->color = 0;
+              s->left->color = 0;
+              rightRotate(x->p);
+              x = root;
+            }
+          }
+        }
+        x->color = 0;
+      }
+
+          void rbTransplant(node *u, node *v) {
+        if (u->p == nullptr) {
+          root = v;
+        } else if (u == u->p->left) {
+          u->p->left = v;
+        } else {
+          u->p->right = v;
+        }
+        v->p = u->p;
+      }
+
+      void deleteNodeHelper(node *myNode, int element) {
+        node *z = empty_node;
+        node *x, *y;
+        while (myNode != empty_node) {
+          if (myNode->key == element) {
+            z = myNode;
+          }
+
+          if (myNode->key <= element) {
+            myNode = myNode->right;
+          } else {
+            myNode = myNode->left;
+          }
+        }
+
+        if (z == empty_node) {
+          cout << "Key not found in the tree" << endl;
+          return;
+        }
+
+        y = z;
+        int y_original_color = y->color;
+        if (z->left == empty_node) {
+          x = z->right;
+          rbTransplant(z, z->right);
+        } else if (z->right == empty_node) {
+          x = z->left;
+          rbTransplant(z, z->left);
+        } else {
+          y = minimum(z->right);
+          y_original_color = y->color;
+          x = y->right;
+          if (y->p == z) {
+            x->p = y;
+          } else {
+            rbTransplant(y, y->right);
+            y->right = z->right;
+            y->right->p = y;
+          }
+
+          rbTransplant(z, y);
+          y->left = z->left;
+          y->left->p = y;
+          y->color = z->color;
+        }
+        delete z;
+        if (y_original_color == 0) {
+          deleteFix(x);
+        }
+      }
+
+      void Delete(int data) {
+        deleteNodeHelper(this->root, data);
+      }
 
 //    std::string get_current_dir() {
 //        char buff[FILENAME_MAX]; //create string buffer to hold path
