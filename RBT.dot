@@ -1,0 +1,17 @@
+digraph tree {
+node [shape = circle , style = filled, fillcolor = black, fontcolor = white,fontname = "helvetica bold", fontsize = 17];
+12 -> 0;
+0 [fillcolor = red];
+0 -> pGgXrpNrvY;
+pGgXrpNrvY[label = NIL, fixedsize = true, fontname = "helvetica"];
+0 [fillcolor = red];
+0 -> StMwCYSYyC;
+StMwCYSYyC[label = NIL, fixedsize = true, fontname = "helvetica"];
+12 -> 13;
+13 [fillcolor = red];
+13 -> QPEvIkEffm;
+QPEvIkEffm[label = NIL, fixedsize = true, fontname = "helvetica"];
+13 [fillcolor = red];
+13 -> zNiMKKASVW;
+zNiMKKASVW[label = NIL, fixedsize = true, fontname = "helvetica"];
+}
